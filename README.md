@@ -13,13 +13,13 @@
 - **Rainfall**
 
 
-#### This readings will be sent real time via a wireless protocol to a Raspberry Pi which will then give a live display of the readings in a GUI
+#### This readings will be sent real time via a wireless protocol to a Raspberry Pi which will then give a live display of the readings in a GUI interface. 
 
 ---
 
 ### Progress
 
-The project at its starting point consists of an Arduino UNO and a DHT11 sensor and can display the temperature in C (or F) and the humidity in %.<br>
+The project currently consists of an Arduino UNO and a DHT11 sensor and can display the temperature in C (or F) and the humidity in %.<br>
 It displays the readings on a 16x2 LCD screen in the format:<br><br>Temp: 20.0 C<br>Humidity 60.00%<br>
 
 
@@ -38,18 +38,12 @@ It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebo
 
 ### Communication
 
-The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> I am looking at two weather stations from [DFRobot](https://thepihut.com/products/weather-station-kit-with-anemometer-wind-vane-rain-bucket) and a second from [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station). The SparkFun comes with a ESP32 board for wireless communication but costs a bit more. The DF Robot station comes with a serial board which can connect to a module of my choice for comms.<br>Some different ways I can communicate the data wirelessly are:
-- Wi-fi
-- Bluetooth
-- Zigbee
-- MQTT
-
-Regardless of which station kit I buy I will have an ESP32 board available, either from the SparkFun kit or my own [Arduino Nano ESP32](https://thepihut.com/products/arduino-nano-esp32-with-headers) that I have currently on order.
+The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> I am looking at two weather stations from [DFRobot](https://thepihut.com/products/weather-station-kit-with-anemometer-wind-vane-rain-bucket) and a second from [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station). The SparkFun comes with a ESP32 board for wireless communication. The DF Robot station comes with a serial board which can connect to a module of my choice for comms.<br>I have an Arduino nano esp32 so either kit I will be able to use WiFi or Bluetooth for wireless Comms
 
 
-My initial idea is to use Wi-Fi for communication, The board supports both Wi-fi and Bluetooth so I do have the option to look into a Bluetooth option If i want to explore that route.
+My initial idea for data communication is to use the MQTT protocol. The choice for this is based on my own knowledge and interests. I don't have much of an interest in web development so using  HTTP or TCP to communicate data could involve having to work with development tools such as Node.js
 
-I am currently looking into using MQTT for the communication by making the Pi the client and the nano the publisher to send weather topics for the pi to receive 
+using MQTT will be a more straightforward tool that suits IoT more. For this I'll need an MQTT broker, such as Mosquitto. 
 
 ---
 
