@@ -68,6 +68,14 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 
 
 --- 
+### Future goals
+
+- **Set up outside weather station**<br>This will involve purchasing either one of the stations, finding a suitable place in my garden to set up and then connecting the wiring and testing the data locally
+- **Create RasPi access point**<br> Set up the Raspberry Pi as a private access point for the ESP32 to connect to.
+- **Establish wireless communication**<br> When the previous two goals are met I can start to send the data to the Pi before working on implementing a GUI to display data.
+- **RasPi GUI**<br>Either using Flet, Figma or another Python GUI module create a way to display the data live on a small home display.
+---
+### Future extended goals
 
 ### Future goals
 
