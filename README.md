@@ -49,6 +49,8 @@ Regardless of which station kit I buy I will have an ESP32 board available, eith
 
 My initial idea is to use Wi-Fi for communication, The board supports both Wi-fi and Bluetooth so I do have the option to look into a Bluetooth option If i want to explore that route.
 
+I am currently looking into using MQTT for the communication by making the Pi the client and the nano the publisher to send weather topics for the pi to receive 
+
 ---
 
 ### Displaying the data
