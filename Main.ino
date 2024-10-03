@@ -83,12 +83,10 @@ void loop() {
       char tempStr[50];
       char humiStr[50];
 
-      // Format and publish temperature
       sprintf(tempStr, "Temperature is %.2f degrees C", temperature_C);
       client.publish("sensor/temperature", tempStr);
       Serial.println(tempStr);
 
-      // Format and publish humidity
       sprintf(humiStr, "Humidity is %.2f%%", humidity);
       client.publish("sensor/humidity", humiStr);
       Serial.println(humiStr);
