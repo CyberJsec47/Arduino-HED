@@ -23,7 +23,7 @@ Initially I was using an Arduino UNO and a DHT11 sensor which displayed the temp
 It displays the readings on a 16x2 LCD screen in the format:<br><br>Temp: 20.0 C<br>Humidity 60.00%<br>
 
 
-It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebody is present to see it. This is to save on battery life.<br>
+It also used an HC-SR04 ultrasonic sensor turn the LCD on and off depending on if somebody is present to see it. This is to save on battery life.<br>
 Now I am using an Arduino Nano ESP32 to test sending readings to my Raspberry Pi via wifi using the MQTT protocol.<br>Which is now displaying the data as <br><br>
 <img src="PXL_20241003_184839416.jpg" width="400" height="400"> <br><br> I have the weather station built and ready to be plugged into the board it came with which includes the ESP32 attachement. <br><br>
 <img src="PXL_20241003_181153331.jpg" width="400" height="400">
