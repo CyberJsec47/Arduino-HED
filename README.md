@@ -19,11 +19,13 @@
 
 ### Progress
 
-The project currently consists of an Arduino UNO and a DHT11 sensor and can display the temperature in C (or F) and the humidity in %.<br>
+Initially I was using an Arduino UNO and a DHT11 sensor which displayed the temperature and the humidity.<br>
 It displays the readings on a 16x2 LCD screen in the format:<br><br>Temp: 20.0 C<br>Humidity 60.00%<br>
 
 
-It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebody is present to see it. This is to safe on battery life.
+It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebody is present to see it. This is to safe on battery life.<br>
+Now I am using an Arduino Nano ESP32 to test sending readings to my Raspberry Pi via wifi using the MQTT protocol.<br>
+I have the weather station kit from SparkFun ready to be build and next steps will be to work on the board that it came with to start retreieving data.<br>
 
 
 --- 
@@ -31,26 +33,19 @@ It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebo
 ### Current Equipment 
 
 - **Arduino UNO**
-- **HC-SR04 Ultrasonic Sensor**
+- **Arduino Nano ESP32**
+- **Raspberry Pi 5**
+- **SparkFun IoT Weather Kit**
 - **DHT11 Temperature and Humidity Sensor**
-- **I2C 16x2 Arduino LCD** 
 ---
 
 ### Communication
 
-The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> I am looking at two weather stations from [DFRobot](https://thepihut.com/products/weather-station-kit-with-anemometer-wind-vane-rain-bucket) and a second from [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station). The SparkFun comes with a ESP32 board for wireless communication. The DF Robot station comes with a serial board which can connect to a module of my choice for comms.<br>I have an Arduino nano esp32 so either kit I will be able to use WiFi or Bluetooth for wireless Comms
-
-
-My initial idea for data communication is to use the MQTT protocol. The choice for this is based on my own knowledge and interests. I don't have much of an interest in web development so using  HTTP or TCP to communicate data could involve having to work with development tools such as Node.js
-
-using MQTT will be a more straightforward tool that suits IoT more. For this I'll need an MQTT broker, such as Mosquitto. 
+The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> The [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station) Comes with an ESP32 board so I can use its WiFi capabilities to send the data with the MQTT protcol by setting the the board as publisher and the RaspPi and a subscriber.<br> To do this I am using the Mosquitto MQTT broker on the Pi. 
 
 ---
 
-### Displaying the data
-
-
-The data will be sent from the outside weather station inside to my [Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/) to take in the data and display in a suitable way.<br> To recieve the data from the station via Wi-Fi I am planning to set the RaspPi up as its own private access point and connect the ESP32 to it. 
+### Displaying the data 
 
 Once the pi has the data I am thinking of creating either a Python program to proccess and display using a GUI such as [Flet](https://flet.dev/) and use [MatLab](https://uk.mathworks.com/products/matlab.html) to graph out the data to display in charts for live and trends of climate.<br> or a second option using the same methods but as a web page running on the Pi. Both have positive and negatives to look into. These are future goals once the station is built and working.
 
@@ -66,10 +61,9 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 --- 
 ### Future goals
 
-- **Set up outside weather station**<br>This will involve purchasing either one of the stations, finding a suitable place in my garden to set up and then connecting the wiring and testing the data locally
-- **Create RasPi access point**<br> Set up the Raspberry Pi as a private access point for the ESP32 to connect to.
-- **Establish wireless communication**<br> When the previous two goals are met I can start to send the data to the Pi before working on implementing a GUI to display data.
+- **Set up outside weather station**<br>Set up the station outside, create a waterproof envrionment for the electical parts and upload a sketch to proccess the data and send via MQTT to the Pi for displaying.
 - **RasPi GUI**<br>Either using Flet, Figma or another Python GUI module create a way to display the data live on a small home display.
+- **Look into Node-RED or WebEx**In my uni IoT module I am going to learning abouw using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
 ---
 ### Future extended goals
 
