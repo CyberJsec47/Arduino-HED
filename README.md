@@ -24,7 +24,9 @@ It displays the readings on a 16x2 LCD screen in the format:<br><br>Temp: 20.0 C
 
 
 It also uses a HC-SR04 ultrasonic turn the LCD on and off depending on if somebody is present to see it. This is to safe on battery life.<br>
-Now I am using an Arduino Nano ESP32 to test sending readings to my Raspberry Pi via wifi using the MQTT protocol.<br>
+Now I am using an Arduino Nano ESP32 to test sending readings to my Raspberry Pi via wifi using the MQTT protocol.<br>Which is now displaying the data as <br>
+![Schematic](https://github.com/CyberJsec47/Arduino-Home-Climate-Display/blob/main/Schematic.png)
+
 I have the weather station kit from SparkFun ready to be build and next steps will be to work on the board that it came with to start retreieving data.<br>
 
 
