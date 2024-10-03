@@ -1,82 +1,97 @@
-#include <LiquidCrystal.h>
 #include <DHT.h>
-#include <DHT_U.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+// Wi-Fi credentials
+const char* ssid = //"My WIfi SSID";
+const char* password = //"My WIFi Password";
 
-#define DHTPIN 2
-#define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
+// MQTT broker settings
+const char* mqtt_server = //"Raspberry Pi IP;
 
-#define TRIGPIN 3
-#define ECHOPIN 4
-#define MAX_DISTANCE 25
+WiFiClient espClient;
+PubSubClient client(espClient);
 
+unsigned long lastMsg = 0;
+#define MSG_INTERVAL 2000
 
-#define BACKLIGHT_PIN 6
-#define BACKLIGHT_BRIGHTNESS 128 
-#define BACKLIGHT_OFF 0          
+// DHT11 settings
+#define DHT11_PIN  2  
+DHT dht11(DHT11_PIN, DHT11);
 
-void setup() {
-  lcd.begin(16, 2);
-  dht.begin();
-  
-  pinMode(TRIGPIN, OUTPUT);
-  pinMode(ECHOPIN, INPUT);
+void setup_wifi() {
+  Serial.println("Attempting to connect to Wi-Fi...");
+  delay(10);
+  WiFi.begin(ssid, password);
 
-  pinMode(BACKLIGHT_PIN, OUTPUT);
-
-  digitalWrite(BACKLIGHT_PIN, BACKLIGHT_OFF);
-  lcd.noDisplay();
-  
-  Serial.begin(9600);
-}
-
-void loop() {
-  long distance = measureDistance();
-  
-  if (distance < MAX_DISTANCE && distance > 0) {
-    lcd.display();
-    analogWrite(BACKLIGHT_PIN, BACKLIGHT_BRIGHTNESS);
-
-    delay(2000); // Delay for sensor readings
-
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-
-    if (isnan(h) || isnan(t)) {
-      Serial.println(F("Failed to read from DHT sensor!"));
-      return;
-    }
-
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print(F("Temp: "));
-    lcd.print(t);
-    lcd.print(F(" C"));
-
-    lcd.setCursor(0, 1);
-    lcd.print(F("Humidity: "));
-    lcd.print(h);
-    lcd.print(F("%"));
-    
-  } else {
-    lcd.noDisplay(); 
-    digitalWrite(BACKLIGHT_PIN, BACKLIGHT_OFF); 
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
   }
 
-  delay(50); 
+  Serial.println("Connected to Wi-Fi");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
 }
 
-long measureDistance() {
-  digitalWrite(TRIGPIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIGPIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIGPIN, LOW);
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    if (client.connect("ArduinoNanoESP32Client")) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+}
 
-  long duration = pulseIn(ECHOPIN, HIGH);
-  long distance = duration * 0.034 / 2;
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {
+  }
+  Serial.println("Serial connected! Starting setup...");
+
+  dht11.begin(); 
+  setup_wifi();
+  Serial.println("Wi-Fi setup completed.");
   
-  return distance;
+  client.setServer(mqtt_server, 1883);
+  Serial.println("MQTT server set.");
+}
+
+
+void loop() {
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  unsigned long now = millis();
+  if (now - lastMsg > MSG_INTERVAL) {
+    lastMsg = now;
+
+    float temperature_C = dht11.readTemperature();
+    float humidity = dht11.readHumidity();
+
+    if (isnan(temperature_C) || isnan(humidity)) {
+      Serial.println("Failed to read from DHT11 sensor!");
+    } else {
+      char tempStr[50];
+      char humiStr[50];
+
+      // Format and publish temperature
+      sprintf(tempStr, "Temperature is %.2f degrees C", temperature_C);
+      client.publish("sensor/temperature", tempStr);
+      Serial.println(tempStr);
+
+      // Format and publish humidity
+      sprintf(humiStr, "Humidity is %.2f%%", humidity);
+      client.publish("sensor/humidity", humiStr);
+      Serial.println(humiStr);
+    }
+  }
 }
