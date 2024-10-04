@@ -64,7 +64,7 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 
 - **Set up outside weather station**<br>Set up the station outside, create a waterproof envrionment for the electical parts and upload a sketch to proccess the data and send via MQTT to the Pi for displaying.
 - **RasPi GUI**<br>Either using Flet, Figma or another Python GUI module create a way to display the data live on a small home display.
-- **Look into Node-RED or WebEx**In my uni IoT module I am going to learning abouw using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
+- **Look into Node-RED or WebEx** In my uni IoT module I am going to learning abouw using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
 ---
 ### Future extended goals
 
