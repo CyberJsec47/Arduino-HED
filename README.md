@@ -55,6 +55,7 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 
 
 ### Current Wiring diagram 
+<br>*Note the current schematic maker I've used doesnt have a nano ESP32 so the diagram is showing a Nano R3, the rest is the same*<br>
 
 ![Nano_schem](Images/Nano_schem.png)
 
