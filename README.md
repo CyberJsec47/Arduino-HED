@@ -56,7 +56,7 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 
 ### Current Wiring diagram 
 
-![Schematic](https://github.com/CyberJsec47/Arduino-Home-Climate-Display/blob/main/Schematic.png)
+![Nano_schem](Images/Nano_schem.png)
 
 
 --- 
