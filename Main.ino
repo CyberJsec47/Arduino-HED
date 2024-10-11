@@ -1,43 +1,48 @@
-#include <DHT.h>
+#include <SparkFunBME280.h>
+#include <Wire.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-// Wi-Fi credentials
-const char* ssid = //"My WIfi SSID";
-const char* password = //"My WIFi Password";
+// WiFi details
+ const char* ssid = "//My Wifi";
+ const char* password = "//My Password";
 
 // MQTT broker settings
-const char* mqtt_server = //"Raspberry Pi IP;
+ const char* mqtt_server = "//My server IP";
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+ WiFiClient espClient;
+ PubSubClient client(espClient);
+
+BME280 tempSensor;
 
 unsigned long lastMsg = 0;
-#define MSG_INTERVAL 2000
-
-// DHT11 settings
-#define DHT11_PIN  2  
-DHT dht11(DHT11_PIN, DHT11);
+#define MSG_INTERVAL 10000
 
 void setup_wifi() {
   Serial.println("Attempting to connect to Wi-Fi...");
-  delay(10);
+  
   WiFi.begin(ssid, password);
+  unsigned long startAttemptTime = millis(); 
+  unsigned long timeout = 10000; 
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < timeout) {
     delay(500);
     Serial.print(".");
   }
 
-  Serial.println("Connected to Wi-Fi");
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nConnected to Wi-Fi");
+    Serial.println(WiFi.localIP()); // Print the local IP
+  } else {
+    Serial.println("\nFailed to connect to Wi-Fi within the timeout period.");
+  }
 }
 
+
 void reconnect() {
-  while (!client.connected()) {
+ while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (client.connect("ArduinoNanoESP32Client")) {
+    if (client.connect("ESP32Client")) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
@@ -46,50 +51,69 @@ void reconnect() {
       delay(5000);
     }
   }
-}
-
+ }
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial) {
-  }
+  Serial.begin(115200);
+  while (!Serial);
   Serial.println("Serial connected! Starting setup...");
-
-  dht11.begin(); 
-  setup_wifi();
+  
+  setup_wifi(); // connect to Wi-Fi
   Serial.println("Wi-Fi setup completed.");
   
-  client.setServer(mqtt_server, 1883);
-  Serial.println("MQTT server set.");
+   client.setServer(mqtt_server, 1883); // Set MQTT server and port
+   Serial.println("MQTT server set.");
+
+  Wire.begin();
+  
+  if (tempSensor.begin() == false) {
+    Serial.println("BME280 did not respond.");
+    while(1);
+  }
 }
 
+void readAndPrintSensorData() {
+  float temperature_C = tempSensor.readTempC();
+  float humidity = tempSensor.readFloatHumidity();
+  float pressure = tempSensor.readFloatPressure();
+  float altitude = tempSensor.readFloatAltitudeFeet();
+
+  // Print data to Serial Monitor
+  Serial.printf("Temperature: %.2f C\n", temperature_C);
+  Serial.printf("Humidity: %.2f\n", humidity);
+  Serial.printf("Pressure: %.2f Pa\n", pressure);
+  Serial.printf("Altitude: %.2f feet\n", altitude);
+  Serial.printf("-------------------------------\n");
+ 
+  
+  // Prepare strings for MQTT messages
+  char tempStr[50], humiStr[50], pressStr[50], altStr[50];
+  
+  sprintf(tempStr, "Temperature is %.2f degrees C", temperature_C);
+  sprintf(humiStr, "Humidity is %.2f", humidity);
+  sprintf(pressStr, "Pressure is %.2f", pressure);
+  sprintf(altStr, "Altitude is %.2f", altitude);
+
+  // Publish only if connected to MQTT
+  if (client.connected()) {
+    client.publish("sensor/temperature", tempStr);
+    client.publish("sensor/humidity", humiStr);
+    client.publish("sensor/pressure", pressStr);
+    client.publish("sensor/altitude", altStr);
+  }
+}
 
 void loop() {
-  if (!client.connected()) {
+   // Try to reconnect to MQTT if disconnected
+  if (WiFi.status() == WL_CONNECTED && !client.connected()) {
     reconnect();
   }
+
   client.loop();
 
   unsigned long now = millis();
   if (now - lastMsg > MSG_INTERVAL) {
     lastMsg = now;
-
-    float temperature_C = dht11.readTemperature();
-    float humidity = dht11.readHumidity();
-
-    if (isnan(temperature_C) || isnan(humidity)) {
-      Serial.println("Failed to read from DHT11 sensor!");
-    } else {
-      char tempStr[50];
-      char humiStr[50];
-
-      sprintf(tempStr, "Temperature is %.2f degrees C", temperature_C);
-      client.publish("sensor/temperature", tempStr);
-      Serial.println(tempStr);
-
-      sprintf(humiStr, "Humidity is %.2f%%", humidity);
-      client.publish("sensor/humidity", humiStr);
-      Serial.println(humiStr);
-    }
+    readAndPrintSensorData();
   }
 }
