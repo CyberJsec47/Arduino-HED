@@ -22,8 +22,8 @@
 Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br> I have the weather station set up which just needs connecting and to modify the code to add in the wind and rain data.<br>Previous tests have set up the RasPi with an MQTT broker and can subscribe to the data published by the ESP32.<br> This has been made in class so currently The Pi still needs to be tested at home on my own Wifi to check all the MQTT messages come through.<br> Next steps is to finish the set up and to create a Python or C script to sub to all the messages and display with on command.
 
 
-It also used an HC-SR04 ultrasonic sensor turn the LCD on and off depending on if somebody is present to see it. This is to save on battery life.<br>
-Now I am using an Arduino Nano ESP32 to test sending readings to my Raspberry Pi via wifi using the MQTT protocol.<br>Which is now displaying the data as <br><br>
+
+Example of a previous test using an ESP32 with a DHT11 sensor sending data to the Pi. I opened two terminals to subscribe to the messages, something I am wanting a script to do automatically in one terminal. <br><br>
 <img src="Images/MQTT-Test.jpg" width="400" height="400"> <br><br> I have the weather station built and ready to be plugged into the board it came with which includes the ESP32 attachement. <br><br>
 <img src="Images/Station.jpg" width="400" height="400">
 
