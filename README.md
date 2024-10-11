@@ -19,8 +19,7 @@
 
 ### Progress
 
-Initially I was using an Arduino UNO and a DHT11 sensor which displayed the temperature and the humidity.<br>
-It displays the readings on a 16x2 LCD screen in the format:<br><br>Temp: 20.0 C<br>Humidity 60.00%<br>
+Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br> I have the weather station set up which just needs connecting and to modify the code to add in the wind and rain data.<br>Previous tests have set up the RasPi with an MQTT broker and can subscribe to the data published by the ESP32.<br> This has been made in class so currently The Pi still needs to be tested at home on my own Wifi to check all the MQTT messages come through.<br> Next steps is to finish the set up and to create a Python or C script to sub to all the messages and display with on command.
 
 
 It also used an HC-SR04 ultrasonic sensor turn the LCD on and off depending on if somebody is present to see it. This is to save on battery life.<br>
