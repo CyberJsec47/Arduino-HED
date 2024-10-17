@@ -19,14 +19,7 @@ These readings will be sent real time wirelessly to a Raspberry Pi which will th
 
 ### Progress
 
-Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br>>Currently I have set up all sensors on the station to take readings.<br><img src="Images/Data_On_Serial.jpg" width="400" height="400"> They all are published to an MQTT broker and the Pi is able to subscribe to the topics to display the data.<br><br><img src="Images/RasPi_MQTT_sub.jpg" width="400" height="400">Next steps is to finish the set up and to create a Python or C script to sub to all the messages and display with on command.
-
-
-
-Example of a previous test using an ESP32 with a DHT11 sensor sending data to the Pi. I opened two terminals to subscribe to the messages, something I am wanting a script to do automatically in one terminal. <br><br>
-<img src="Images/MQTT-Test.jpg" width="400" height="400"> <br><br> I have the weather station built and ready to be plugged into the board it came with which includes the ESP32 attachement. <br><br>
-<img src="Images/Station.jpg" width="400" height="400">
-
+Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br>Currently I have set up all sensors on the station to take readings.<br><br><img src="Images/Data_On_Serial.jpg" width="400" height="400"><br> They all are published to an MQTT broker and the Pi is able to subscribe to the topics to display the data.<br><br><img src="Images/RasPi_MQTT_sub.jpg" width="400" height="400"><br>Next steps is to finish the set up and to create a script to sub to all the messages and display with on command. For tests I might create the script with Bash, Python or C.
 
 --- 
 
@@ -41,7 +34,7 @@ Example of a previous test using an ESP32 with a DHT11 sensor sending data to th
 
 ### Communication
 
-The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> The [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station) Comes with an ESP32 board so I can use its WiFi capabilities to send the data with the MQTT protcol by setting the the board as publisher and the RaspPi and a subscriber.<br> To do this I am using the Mosquitto MQTT broker on the Pi. 
+The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> The [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station) Comes with an ESP32 board so I can use its WiFi capabilities to send the data with the MQTT protocol by setting the the board as publisher and the RaspPi and a subscriber.<br> To do this I am using the Mosquitto MQTT broker on the Pi. 
 
 ---
 
@@ -52,19 +45,12 @@ Once the pi has the data I am thinking of creating either a Python program to pr
 
 --- 
 
-
-### Current Wiring diagram 
-<br>*Note the current schematic maker I've used doesnt have a nano ESP32 so the diagram is showing a Nano R3, the rest is the same*<br>
-
-![Nano_schem](Images/Nano_schem.png)
-
-
---- 
 ### Future goals
 
 - **Set up outside weather station**<br>Set up the station outside, create a waterproof envrionment for the electical parts and upload a sketch to proccess the data and send via MQTT to the Pi for displaying.
 - **RasPi GUI**<br>Either using Flet, Figma or another Python GUI module create a way to display the data live on a small home display.
-- **Look into Node-RED or WebEx** In my uni IoT module I am going to learning abouw using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
+- **Look into Node-RED or WebEx** In my uni IoT module I am going to learning about using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
+- **Set Up the DHT11 sensor with the Nano ESP32** Create a seperate board with the Nano and DHT sensor to be kept inside to display indoor temperature and humidity.
 ---
 ### Future extended goals
 
