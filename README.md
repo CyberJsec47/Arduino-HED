@@ -13,13 +13,13 @@
 - **Rainfall**
 
 
-#### This readings will be sent real time via a wireless protocol to a Raspberry Pi which will then give a live display of the readings in a GUI interface. 
+These readings will be sent real time wirelessly to a Raspberry Pi which will then give a live display of the readings in a GUI interface. 
 
 ---
 
 ### Progress
 
-Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br> I have the weather station set up which just needs connecting and to modify the code to add in the wind and rain data.<br>Previous tests have set up the RasPi with an MQTT broker and can subscribe to the data published by the ESP32.<br> This has been made in class so currently The Pi still needs to be tested at home on my own Wifi to check all the MQTT messages come through.<br> Next steps is to finish the set up and to create a Python or C script to sub to all the messages and display with on command.
+Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br>>Currently I have set up all sensors on the station to take readings.<br><img src="Images/Data_On_Serial.jpg" width="400" height="400"> They all are published to an MQTT broker and the Pi is able to subscribe to the topics to display the data.<br><br><img src="Images/RasPi_MQTT_sub.jpg" width="400" height="400">Next steps is to finish the set up and to create a Python or C script to sub to all the messages and display with on command.
 
 
 
