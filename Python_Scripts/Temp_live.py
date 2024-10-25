@@ -24,8 +24,11 @@
 
 import paho.mqtt.client as mqtt
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import style
 from matplotlib.animation import FuncAnimation
 import datetime as dt
+import re
+import numpy as np
 
 # MQTT Settings
 broker = "localhost"
@@ -33,7 +36,7 @@ port = 1883
 topic = "sensor/temperature"
 
 # only have 100 (mins) of data in the graph
-max_mins = 100
+max_mins = 5
 
 
 # Data for graph
@@ -42,10 +45,13 @@ y_data = []
 
 def on_message(client, userdata, msg):
     message = msg.payload.decode().strip()
-    print(f"Message received: '{message}'")
+    match = re.search(r"[-+]?\d*\.\d+|\d+", message)
+    if match:
+        temperature = float(match.group())
+        print(temperature)
     
     x_data.append(dt.datetime.now().strftime('%H:%M:%S'))
-    y_data.append(message)
+    y_data.append(temperature)
     
     if len(x_data) > max_mins:
         x_data.pop(0)
@@ -65,16 +71,22 @@ client.on_connect = on_connect
 
 def update_graph(frame):
     plt.cla()
-    plt.plot(x_data, y_data, label="Temperature")
-    plt.xticks(rotation=45)
-    plt.xlabel("Time")
-    plt.ylabel("Temperature C")
-    plt.title("Live Temperature Test")
-    plt.legend(loc="upper left")
-    plt.tight_layout
+    
+    if x_data and y_data:
+        plt.stem(x_data, y_data, linefmt='blue', markerfmt='D', label="Temperature")
+        plt.xticks(rotation=45)
+        plt.xlabel("Time")
+        plt.ylabel("Temperature C")
+        plt.title("Live Temperature Test")
+        plt.legend(loc="upper left")
+        plt.tight_layout
+        plt.ylim([30.0,35.0])
+        plt.yticks(np.arange(30.0, 35.0, 0.5))
+        plt.fill_between(x_data, y_data, 20.0, step="pre", alpha=0.5, color='lightsteelblue')
+
     
     
-plt.style.use('fivethirtyeight')
+plt.style.use('ggplot')
 fig = plt.figure()
 
 client.connect(broker, port, 60)
