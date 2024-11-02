@@ -29,6 +29,19 @@ x_data = []
 y_data = []
 ax = None
 
+live_reading = []
+
+def current_reading(live_reading):
+    if live_reading:
+        current_value = live_reading[0]
+        if len(live_reading) > 1:
+            live_reading.pop(0)
+        return current_value
+    return None
+
+def add_reading(value):
+    live_reading.append(value)
+
 def start_humidity_monitoring(ax_in, broker="localhost", port=1883, topic="sensor/humidity", max_mins=5):
     global ax
     ax = ax_in
@@ -42,6 +55,7 @@ def start_humidity_monitoring(ax_in, broker="localhost", port=1883, topic="senso
             humidity = float(match.group())
             x_data.append(dt.datetime.now().strftime('%H:%M:%S'))
             y_data.append(humidity)
+            live_reading.append(message)
             if len(x_data) > max_mins:
                 x_data.pop(0)
                 y_data.pop(0)
@@ -60,5 +74,11 @@ def update_humidity_plot():
         ax.clear()
         ax.plot(x_data, y_data, marker='o', color='green', label="Humidity (%)")
         ax.set_xticks(x_data)
-        ax.set_xticklabels(x_data, rotation=45)
+        ax.set_xticklabels(x_data, rotation=45, ha="right")
+        ax.set_ylim([1.00, 99.00])
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Humidity %")
+        ax.set_title("Outside Humidity")
+        ax.legend(["Hiumidity %"], loc="upper left")
+        ax.grid(True)
  
