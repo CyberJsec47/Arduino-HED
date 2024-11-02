@@ -21,63 +21,68 @@
 #  MA 02110-1301, USA.
 #  
 import paho.mqtt.client as mqtt
-import matplotlib.pyplot as plt
-import numpy as np
-import re
 import datetime as dt
+import matplotlib.pyplot as plt
+import re
 
-pressures = []
-times = []
-ax = None 
-topic = None  
-max_mins = 5
+x_data = []  
+y_data = [] 
+ax = None
+live_reading = []
 
-def start_pressure_plotting(ax_in, broker="localhost", port=1883, topic_in="sensor/pressure", max_points=24):
-    global ax, topic
-    ax = ax_in  
-    topic = topic_in 
+def current_reading(live_reading):
+    if live_reading:
+        current_value = live_reading[0]
+        if len(live_reading) > 1:
+            live_reading.pop(0)
+        return current_value
+    return None
 
+def add_reading(value):
+    live_reading.append(value)
+
+def start_pressure_monitoring(ax_in, broker="localhost", port=1883, topic="sensor/pressure", max_mins=5):
+    global ax
+    ax = ax_in 
     client = mqtt.Client()
+
+    def on_message(client, userdata, msg):
+        global x_data, y_data, live_reading
+        message = msg.payload.decode().strip()
+        match = re.search(r"[-+]?\d*\.\d+|\d+", message)
+        if match:
+            pressure = float(match.group())
+            x_data.append(dt.datetime.now().strftime('%H:%M:%S'))
+            y_data.append(pressure)
+            live_reading.append(message)
+            if len(y_data) > max_mins:
+                x_data.pop(0)
+                y_data.pop(0)
+ 
+            update_pressure_barchart()
+
     client.on_message = on_message
+
+    def on_connect(client, userdata, flags, rc):
+        client.subscribe(topic)
+
     client.on_connect = on_connect
     client.connect(broker, port, 60)
     client.loop_start()
 
-def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
-    client.subscribe(topic) 
-
-def on_message(client, userdata, msg):
-    current_time = dt.datetime.now()
-    message = msg.payload.decode().strip()
-    match = re.search(r"[-+]?\d*\.\d+|\d+", message)
-    
-    if match:
-        pressure = float(match.group())
-        print(f"Received pressure: {pressure}")
-
-        times.append(current_time.strftime('%H:%M:%S'))
-        pressures.append(pressure)
-        
-        if len(times) > max_mins:
-            times.pop(0)
-            pressures.pop(0)
-
-        update_pressure_plot() 
-
-def update_pressure_plot():
+def update_pressure_barchart():
     if ax is not None:
         ax.clear()
-        ax.plot(times, pressures, marker='o', label="Pressure", color='blue')
         
+        ax.bar(x_data, y_data, color='blue', edgecolor='black', alpha=0.7)
+        
+        ax.set_xticks(range(len(x_data)))
+        ax.set_xticklabels(x_data, rotation=45, ha="right")
+        ax.set_ylim([102000.00, 104000.00])
         ax.set_xlabel("Time")
         ax.set_ylabel("Pressure (Pa)")
-        ax.set_title("Pressure Over Time")
-        ax.legend(loc="upper left")
-        ax.set_ylim(101000.0, 103000.0)
+        ax.set_title("Atmospheric Pressure")
+        ax.legend(["Pressure (Pa)"], loc="upper left")
         ax.grid(True)
-
-        plt.xticks(rotation=45)
-        plt.tight_layout()
 
         plt.draw()
