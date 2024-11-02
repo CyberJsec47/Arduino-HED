@@ -29,6 +29,18 @@ import re
 x_data = []
 y_data = []
 ax = None
+live_reading = []
+
+def current_reading(live_reading):
+    if live_reading:
+        current_value = live_reading[0]
+        if len(live_reading) > 1:
+            live_reading.pop(0)
+        return current_value
+    return None
+
+def add_reading(value):
+    live_reading.append(value)
 
 def start_temperature_monitoring(ax_in, broker="localhost", port=1883, topic="sensor/temperature", max_mins=5):
     global ax
@@ -43,6 +55,7 @@ def start_temperature_monitoring(ax_in, broker="localhost", port=1883, topic="se
             temperature = float(match.group())
             x_data.append(dt.datetime.now().strftime('%H:%M:%S'))
             y_data.append(temperature)
+            live_reading.append(message)
             if len(x_data) > max_mins:
                 x_data.pop(0)
                 y_data.pop(0)
@@ -64,7 +77,8 @@ def update_temperature_plot():
         ax.set_xticklabels(x_data, rotation=45)
         ax.set_xlabel("Time")
         ax.set_ylabel("Temperature (°C)")
-        ax.set_title("Live Temperature Monitoring")
+        ax.set_title("Outside Temperature")
         ax.legend(loc="upper left")
         ax.set_ylim([20.0, 35.0])
         ax.fill_between(x_data, y_data, 20.0, step="pre", alpha=0.5, color='lightsteelblue')
+
