@@ -42,20 +42,3 @@ The data from the outdoor weather station will need to be sent to the Pi inside 
 
 ---
 
-### Displaying the data 
-
-Once the pi has the data I am thinking of creating either a Python program to proccess and display using a GUI such as [Flet](https://flet.dev/) and use [MatLab](https://uk.mathworks.com/products/matlab.html) to graph out the data to display in charts for live and trends of climate.<br> or a second option using the same methods but as a web page running on the Pi. Both have positive and negatives to look into. These are future goals once the station is built and working.
-
-
---- 
-
-### Future goals
-
-- **Set up outside weather station**<br>Set up the station outside, create a waterproof envrionment for the electical parts and upload a sketch to proccess the data and send via MQTT to the Pi for displaying.
-- **RasPi GUI**<br>Either using Flet, Figma or another Python GUI module create a way to display the data live on a small home display.
-- **Look into Node-RED or WebEx** In my uni IoT module I am going to learning about using Node-RED and Webex for IoT devices. This might become a useful tool to use with this project which can help displaying data.
-- **Set Up the DHT11 sensor with the Nano ESP32** Create a seperate board with the Nano and DHT sensor to be kept inside to display indoor temperature and humidity.
----
-### Future extended goals
-
-- **individual room temperature control**<br> Once the initial setup is complete and working I want to create individual temperature modules that can be placed in each room of my house.<br> Each room has an electric radiator which I will connect a smart plug too which can be controlled via the Pi or an external app such as home assistance.<br> Monitoring each room I can choose to turn a radiator on and off by the plug allowing me to set the temperature of specific rooms, for example once I finish work I can turn on the living room radiator and once I am home the room is warm.<br> I can also create a script that automates this process to turn on and off at certain temperatures. This is because my radiators are old and lack a timer or any controls for this.
