@@ -30,7 +30,6 @@ import Wind
 
 def display_all_graphs():
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
-    fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2, wspace=0.4, hspace=0.4)
     
     Pressure.start_pressure_monitoring(axes[0, 0], broker="localhost", port=1883, topic="sensor/pressure", max_mins=5)
     Temperature.start_temperature_monitoring(axes[0, 1], broker="localhost", port=1883, topic="sensor/temperature", max_mins=5)
@@ -38,9 +37,7 @@ def display_all_graphs():
     axes[1, 1] = fig.add_subplot(2, 2, 4, projection='polar')
     Wind.start_wind_rose_plot(axes[1, 1], broker="localhost", port=1883, max_data_points=50)
 
-
     text_box = fig.text(0.5, 0.02, "", ha='center', va='bottom', fontsize=12, color="black")
-
 
     def update_all(frame):
         Pressure.update_pressure_barchart()
@@ -60,11 +57,7 @@ def display_all_graphs():
             f"Wind speed is:    {current_wind if current_wind is not None else 'N/A'}"
         )
 
-    ani = FuncAnimation(fig, update_all, interval=1000)
+    fig.ani = FuncAnimation(fig, update_all, interval=1000)
+    fig.tight_layout(pad=7.0)
 
-    plt.tight_layout(rect=[0, 0.15, 1, 1])
-    plt.show()
-
-if __name__ == '__main__':
-    display_all_graphs()
-
+    return fig
