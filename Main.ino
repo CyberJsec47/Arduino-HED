@@ -9,7 +9,7 @@
  const char* password = "//MyPassword";
 
 // MQTT broker settings
- const char* mqtt_server = "//PI address";
+ const char* mqtt_server = "//IP address";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -22,10 +22,10 @@ BME280 tempSensor;
 SFEWeatherMeterKit weatherMeterKit(windDirectionPin, windSpeedPin, rainfallPin);
 
 // Time intervals
-#define ACTIVE_TIME 60000   // 60 seconds active
-#define SLEEP_TIME 60000000 // 60 seconds sleep in microseconds
-#define MSG_INTERVAL 10000  // 10 seconds
-#define PRESSURE_INTERVAL 10000 // 10 seconds
+#define ACTIVE_TIME 60000  
+#define SLEEP_TIME 60000000 
+#define MSG_INTERVAL 10000  
+#define PRESSURE_INTERVAL 10000 
 
 unsigned long lastMsg = 0;
 unsigned long lastPressureMsg = 0;
@@ -33,6 +33,7 @@ unsigned long activeStartTime = 0;
 
 void setup_wifi() {
   Serial.println("Attempting to connect to Wi-Fi...");
+  //ssid for uni ssid, password for home
   WiFi.begin(ssid);
   unsigned long startAttemptTime = millis();
   unsigned long timeout = 10000;
@@ -44,7 +45,7 @@ void setup_wifi() {
 
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\nConnected to Wi-Fi");
-    Serial.println(WiFi.localIP()); // Print the local IP
+    Serial.println(WiFi.localIP()); 
   } else {
     Serial.println("\nFailed to connect to Wi-Fi within the timeout period.");
   }
@@ -90,7 +91,7 @@ void readAndPrintSensorData() {
   float wind_speed = weatherMeterKit.getWindSpeed();
   float rain = weatherMeterKit.getTotalRainfall();
 
-  // Print data to Serial Monitor
+  // Print data to Serial Monitor for debugging
   Serial.printf("Temperature: %.2f C\n", temperature_C);
   Serial.printf("Humidity: %.2f\n", humidity);
   Serial.printf("Pressure: %.2f Pa\n", pressure);
@@ -111,7 +112,6 @@ void readAndPrintSensorData() {
 }
 
 void loop() {
-  // Reconnect to Wi-Fi and MQTT if disconnected
   if (WiFi.status() == WL_CONNECTED && !client.connected()) {
     reconnect();
   }
@@ -120,7 +120,6 @@ void loop() {
 
   unsigned long now = millis();
 
-  // Send periodic sensor data
   if (now - lastMsg > MSG_INTERVAL) {
     lastMsg = now;
     readAndPrintSensorData();
@@ -135,10 +134,9 @@ void loop() {
     esp_light_sleep_start();
     Serial.println("Woke up from light sleep");
 
-    // Reinitialize after waking up
     setup_wifi();
     reconnect();
 
-    activeStartTime = millis(); // Reset active period timer
+    activeStartTime = millis();
   }
 }
