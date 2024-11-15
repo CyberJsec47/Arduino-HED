@@ -26,6 +26,7 @@ SFEWeatherMeterKit weatherMeterKit(windDirectionPin, windSpeedPin, rainfallPin);
 #define SLEEP_TIME 60000000 
 #define MSG_INTERVAL 10000  
 #define PRESSURE_INTERVAL 10000 
+#define WATCHDOG_TIMEOUT 60  // Watchdog timeout in seconds
 
 unsigned long lastMsg = 0;
 unsigned long lastPressureMsg = 0;
@@ -33,7 +34,6 @@ unsigned long activeStartTime = 0;
 
 void setup_wifi() {
   Serial.println("Attempting to connect to Wi-Fi...");
-  //ssid for uni ssid, password for home
   WiFi.begin(ssid);
   unsigned long startAttemptTime = millis();
   unsigned long timeout = 10000;
@@ -41,18 +41,27 @@ void setup_wifi() {
   while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < timeout) {
     delay(500);
     Serial.print(".");
+    esp_task_wdt_reset();
   }
 
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\nConnected to Wi-Fi");
-    Serial.println(WiFi.localIP()); 
+    Serial.println(WiFi.localIP());
   } else {
     Serial.println("\nFailed to connect to Wi-Fi within the timeout period.");
   }
 }
 
 void reconnect() {
+  esp_task_wdt_reset();
+
+  unsigned long startReconnectTime = millis();
   while (!client.connected()) {
+    if (millis() - startReconnectTime > WATCHDOG_TIMEOUT * 1000) {
+      Serial.println("Reconnect attempt exceeded 60 seconds, resetting...");
+      ESP.restart(); 
+    }
+
     Serial.print("Attempting MQTT connection...");
     if (client.connect("ESP32Client")) {
       Serial.println("connected");
@@ -61,6 +70,7 @@ void reconnect() {
       Serial.print(client.state());
       Serial.println(" retrying in 5 seconds");
       delay(5000);
+      esp_task_wdt_reset(); 
     }
   }
 }
@@ -68,6 +78,12 @@ void reconnect() {
 void setup() {
   Serial.begin(115200);
   Serial.println("Serial connected! Starting setup...");
+
+  esp_task_wdt_config_t config = {
+    .timeout_ms = WATCHDOG_TIMEOUT * 1000 
+  };
+  esp_task_wdt_init(&config); 
+  esp_task_wdt_add(NULL);  
 
   setup_wifi();
   client.setServer(mqtt_server, 1883);
@@ -91,7 +107,6 @@ void readAndPrintSensorData() {
   float wind_speed = weatherMeterKit.getWindSpeed();
   float rain = weatherMeterKit.getTotalRainfall();
 
-  // Print data to Serial Monitor for debugging
   Serial.printf("Temperature: %.2f C\n", temperature_C);
   Serial.printf("Humidity: %.2f\n", humidity);
   Serial.printf("Pressure: %.2f Pa\n", pressure);
@@ -100,7 +115,6 @@ void readAndPrintSensorData() {
   Serial.printf("Rainfall (mm): %.2f\n", rain);
   Serial.println("-------------------------------");
 
-  // Publish data over MQTT
   if (client.connected()) {
     client.publish("sensor/temperature", String(temperature_C).c_str());
     client.publish("sensor/humidity", String(humidity).c_str());
@@ -125,7 +139,6 @@ void loop() {
     readAndPrintSensorData();
   }
 
-  // Check if the active period is over
   if (now - activeStartTime >= ACTIVE_TIME) {
     Serial.println("Entering light sleep for 60 seconds...");
     delay(1000);
@@ -139,4 +152,6 @@ void loop() {
 
     activeStartTime = millis();
   }
+
+  esp_task_wdt_reset();
 }
