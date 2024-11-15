@@ -22,7 +22,10 @@ These readings will be sent real time wirelessly to a Raspberry Pi which will th
 Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br>Currently I have set up all sensors on the station to take readings.<br><br><img src="Images/Data_On_Serial.jpg" width="400" height="400"><br> They all are published to an MQTT broker and the Pi is able to subscribe to the topics to display the data.<br>Using a Bash script I can test all the data comes through<br><br><img src="Images/RasPi_Bash_Display.jpg"><br>
 I started to work on the Python part of this project which is how I am displaying the data.<br> I had one script which took the MQTT message and printing to terminal similar to the Bash script, next I started to work on collecting a live updating feed. 
 
-For this I made a script which collected temperature data and created a animated Matplot chart which updates every 10 seconds showing the temperature over the timeframe of about 16 minutes until it starts to rewrite.<br>Today's progress I made a graph for each of the readings and used Matplotlib Sub plot function to bring them all together in one display<br><br><img src="Images/live_graph.jpg">
+For this I made a script which collected temperature data and created a animated Matplot chart which updates every 10 seconds showing the temperature over the timeframe of about 16 minutes until it starts to rewrite.<br>Today's progress I made a graph for each of the readings and used Matplotlib Sub plot function to bring them all together in one display<br><br><img src="Images/live_graph.jpg"> 
+
+
+One issue that has come up is powering the device. Using a 2000mAh LiPoly battery it lasts around a day until its drained and paired with a 6W solar panel this proves unable to charge the battery quicker than the board drains it.<br> For this I am going to try add in the ESP light sleep mode and change the message intervals to every hour or 30 mins with the board in a sleep mode inbetween with the hope this gives the battery enough time to charge to re transmit messages.<br>
 
 --- 
 
