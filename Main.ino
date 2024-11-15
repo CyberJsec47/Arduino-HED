@@ -11,8 +11,8 @@
 // MQTT broker settings
  const char* mqtt_server = "//PI address";
 
- WiFiClient espClient;
- PubSubClient client(espClient);
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 int windDirectionPin = 35;
 int windSpeedPin = 14;
@@ -21,15 +21,21 @@ int rainfallPin = 27;
 BME280 tempSensor;
 SFEWeatherMeterKit weatherMeterKit(windDirectionPin, windSpeedPin, rainfallPin);
 
+// Time intervals
+#define ACTIVE_TIME 60000   // 60 seconds active
+#define SLEEP_TIME 60000000 // 60 seconds sleep in microseconds
+#define MSG_INTERVAL 10000  // 10 seconds
+#define PRESSURE_INTERVAL 10000 // 10 seconds
+
 unsigned long lastMsg = 0;
-#define MSG_INTERVAL 10000
+unsigned long lastPressureMsg = 0;
+unsigned long activeStartTime = 0; 
 
 void setup_wifi() {
   Serial.println("Attempting to connect to Wi-Fi...");
-  
-  WiFi.begin(ssid, password);
-  unsigned long startAttemptTime = millis(); 
-  unsigned long timeout = 10000; 
+  WiFi.begin(ssid);
+  unsigned long startAttemptTime = millis();
+  unsigned long timeout = 10000;
 
   while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < timeout) {
     delay(500);
@@ -44,46 +50,42 @@ void setup_wifi() {
   }
 }
 
-
 void reconnect() {
- while (!client.connected()) {
+  while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     if (client.connect("ESP32Client")) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(" retrying in 5 seconds");
       delay(5000);
     }
   }
- }
+}
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial);
   Serial.println("Serial connected! Starting setup...");
-  
-  setup_wifi(); // connect to Wi-Fi
-  Serial.println("Wi-Fi setup completed.");
-  
-   client.setServer(mqtt_server, 1883); // Set MQTT server and port
-   Serial.println("MQTT server set.");
+
+  setup_wifi();
+  client.setServer(mqtt_server, 1883);
 
   Wire.begin();
   weatherMeterKit.begin();
-  
+
   if (tempSensor.begin() == false) {
     Serial.println("BME280 did not respond.");
-    while(1);
+    while (1);
   }
+
+  activeStartTime = millis();
 }
 
 void readAndPrintSensorData() {
   float temperature_C = tempSensor.readTempC();
   float humidity = tempSensor.readFloatHumidity();
   float pressure = tempSensor.readFloatPressure();
-  float altitude = tempSensor.readFloatAltitudeFeet();
   float wind_dir = weatherMeterKit.getWindDirection();
   float wind_speed = weatherMeterKit.getWindSpeed();
   float rain = weatherMeterKit.getTotalRainfall();
@@ -92,38 +94,24 @@ void readAndPrintSensorData() {
   Serial.printf("Temperature: %.2f C\n", temperature_C);
   Serial.printf("Humidity: %.2f\n", humidity);
   Serial.printf("Pressure: %.2f Pa\n", pressure);
-  Serial.printf("Altitude: %.2f feet\n", altitude);
   Serial.printf("Wind Direction (Degrees): %.2f\n", wind_dir);
   Serial.printf("Wind Speed (Kph): %.2f\n", wind_speed);
   Serial.printf("Rainfall (mm): %.2f\n", rain);
-  Serial.printf("-------------------------------\n");
- 
-  
-  // Prepare strings for MQTT messages
-  char tempStr[50], humiStr[50], pressStr[50], altStr[50], dirStr[50], speedStr[50], rainStr[50];
-  
-  sprintf(tempStr, "Temperature is %.2f .C", temperature_C);
-  sprintf(humiStr, "Humidity is %.2f", humidity);
-  sprintf(pressStr, "Pressure is %.2f", pressure);
-  sprintf(altStr, "Altitude is %.2f", altitude);
-  sprintf(dirStr, "Wind direction is %.2f degrees", wind_dir);
-  sprintf(speedStr, "Wind speed is %.2f Kph", wind_speed);
-  sprintf(rainStr, "There is %.2f mm of rainfall", rain);
+  Serial.println("-------------------------------");
 
-  // Publish only if connected to MQTT
+  // Publish data over MQTT
   if (client.connected()) {
-    client.publish("sensor/temperature", tempStr);
-    client.publish("sensor/humidity", humiStr);
-    client.publish("sensor/pressure", pressStr);
-    client.publish("sensor/altitude", altStr);
-    client.publish("sensor/direction", dirStr);
-    client.publish("sensor/speed", speedStr);
-    client.publish("sensor/rain", rainStr);
+    client.publish("sensor/temperature", String(temperature_C).c_str());
+    client.publish("sensor/humidity", String(humidity).c_str());
+    client.publish("sensor/pressure", String(pressure).c_str());
+    client.publish("sensor/wind_direction", String(wind_dir).c_str());
+    client.publish("sensor/wind_speed", String(wind_speed).c_str());
+    client.publish("sensor/rainfall", String(rain).c_str());
   }
 }
 
 void loop() {
-   // Try to reconnect to MQTT if disconnected
+  // Reconnect to Wi-Fi and MQTT if disconnected
   if (WiFi.status() == WL_CONNECTED && !client.connected()) {
     reconnect();
   }
@@ -131,8 +119,26 @@ void loop() {
   client.loop();
 
   unsigned long now = millis();
+
+  // Send periodic sensor data
   if (now - lastMsg > MSG_INTERVAL) {
     lastMsg = now;
     readAndPrintSensorData();
+  }
+
+  // Check if the active period is over
+  if (now - activeStartTime >= ACTIVE_TIME) {
+    Serial.println("Entering light sleep for 60 seconds...");
+    delay(1000);
+    client.disconnect(); 
+    esp_sleep_enable_timer_wakeup(SLEEP_TIME); 
+    esp_light_sleep_start();
+    Serial.println("Woke up from light sleep");
+
+    // Reinitialize after waking up
+    setup_wifi();
+    reconnect();
+
+    activeStartTime = millis(); // Reset active period timer
   }
 }
