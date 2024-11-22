@@ -24,9 +24,6 @@ I started to work on the Python part of this project which is how I am displayin
 
 For this I made a script which collected temperature data and created a animated Matplot chart which updates every 10 seconds showing the temperature over the timeframe of about 16 minutes until it starts to rewrite.<br>Today's progress I made a graph for each of the readings and used Matplotlib Sub plot function to bring them all together in one display<br><br><img src="Images/live_graph.jpg"> 
 
-
-One issue that has come up is powering the device. Using a 2000mAh LiPoly battery it lasts around a day until its drained and paired with a 6W solar panel this proves unable to charge the battery quicker than the board drains it.<br> For this I am going to try add in the ESP light sleep mode and change the message intervals to every hour or 30 mins with the board in a sleep mode inbetween with the hope this gives the battery enough time to charge to re transmit messages.<br>
-
 --- 
 
 ### Current Equipment 
