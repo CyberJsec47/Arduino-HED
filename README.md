@@ -17,12 +17,10 @@ These readings will be sent real time wirelessly to a Raspberry Pi which will th
 
 ---
 
-### Progress
+### The Project
 
-Currently I the SparkFun MicroMod board is set up with the ESP32 prossesor attached and is taking various readings at 10 second intervals and dispaying on a serial printout in the Arduino IDE. <br>Currently I have set up all sensors on the station to take readings.<br><br><img src="Images/Data_On_Serial.jpg" width="400" height="400"><br> They all are published to an MQTT broker and the Pi is able to subscribe to the topics to display the data.<br>Using a Bash script I can test all the data comes through<br><br><img src="Images/RasPi_Bash_Display.jpg"><br>
-I started to work on the Python part of this project which is how I am displaying the data.<br> I had one script which took the MQTT message and printing to terminal similar to the Bash script, next I started to work on collecting a live updating feed. 
+I have a SparkFun weather station<br><img src="Images/Station.jpg"><br>And the SaprkFun MicroMod carrier board paired with a ESP32 proccessor<br>IMAGE OF BOARD<br> This takes all the desired readings and uses MQTT to send messages over WiFi to a Raspberry Pi which acts as the MQTT broker and then uses Python and Matlab to plot the messages as data on graphs, I also included a live text display so I can see climate trends over time and a live current reading.<br> The graph is a simple Matlab format put into a Tkinter window<br><img src="Images/live_graph.jpg">
 
-For this I made a script which collected temperature data and created a animated Matplot chart which updates every 10 seconds showing the temperature over the timeframe of about 16 minutes until it starts to rewrite.<br>Today's progress I made a graph for each of the readings and used Matplotlib Sub plot function to bring them all together in one display<br><br><img src="Images/live_graph.jpg"> 
 
 --- 
 
@@ -33,7 +31,6 @@ For this I made a script which collected temperature data and created a animated
 - **Raspberry Pi 5**
 - **SparkFun IoT Weather Kit**
 - **DHT11 Temperature and Humidity Sensor**<br>
-<br><img src="Images/Station.jpg"><br>
 ---
 
 ### Communication
