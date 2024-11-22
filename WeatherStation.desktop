@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Weather Station
+Comment=Click to open weather station
+Exec=/Path/To/WeatherStation.sh
+Icon=/Path/To/Icon.png
+Terminal=false
+Type=Application
