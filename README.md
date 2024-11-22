@@ -58,5 +58,5 @@ As the board isn't saving any data itself I have no issue with a reset as it wou
 ---
 ### **Next steps**
 
-
+Currently I am happy with the outcome of this project and it is working as intended. the only data I have excluded at this point is the rainfall meter and the lightning detector.<br>The lighting detector I find fairly uselss as my area doesn't get much stormy weather and lightning storms are rare or just not interesting to know about.<br>Rainfall is more of an intrest to me but as I want this station to be a outside monitor for my house I dont need to know if its currently raining as I have windows. Knowing the outside climate is useful for me as I don't need to stand outside to know.<br><br>The projects current code uses a rolling 60 second cycle of powering down waiting, powering back sending data for 60 seconds and so on, this is for testing purposes. When it is set up in my garden I will need to adjust this to maybe every 10, 30, 60 mins, this allows time for battery to charge and send some relevant data.<br>
 
