@@ -52,13 +52,13 @@ At its current stage I am saying this project is finished. The main goals of cre
 
 ### **Issues**
 - **Power**
-When I finished the project and was happy with the Python and C++ side of it I started to look into external power. I've settled with a 2000mAh Lipoly battery and a 6W solar panel with a Adafruit bq24074 charging board. This powered the board via the battery and the solar panel keeps the battery topped up.<br> The first issues was the solar panel is not the greatest and with cloudy and dark weather it can't charge the battery as fast as the battery drains to power the board.<br> This I found was the ESP was sending the messages every 10 seconds using a lot of power, I changed this to every 60 seconds the power issues carried on.
+When I finished the project and was happy with the Python and C++ side of it I started to look into external power. I've settled with a 2000mAh Lipoly battery and a 6W solar panel with a Adafruit bq24074 charging board. This powered the board via the battery and the solar panel keeps the battery topped up.<br> The first issues was the solar panel is not the greatest and with cloudy and dark weather it can't charge the battery as fast as the battery drains to power the board.<br> This I found was the ESP was sending the messages every 10 seconds using a lot of power, I changed this to every 60 seconds the power issues carried on.<br>
 - **Resolve**
-To fix this I looked into ESP low power mode functions. As using modem mode or sleep mode caused connection issues or still battery draining issues I opted to use light power mode on a rolling cycle of sleeping for a set time, waking up for a set time and back to sleep.
+To fix this I looked into ESP low power mode functions. As using modem mode or sleep mode caused connection issues or still battery draining issues I opted to use light power mode on a rolling cycle of sleeping for a set time, waking up for a set time and back to sleep.<br><br>
 
 - **Watchdog timers**
-There was issues with connection to wifi not being established which ended in a constant loop of attempting connection, to solve this I looked into setting up a WDT to catch the failed attempt and restart the code. This started to become complicated and the WDT event was being triggered but not restarting the code. I found the WDT was being trigged in a set up loop so as it reset the code it would catch this loop and crash out.
-- **resovle**
+There was issues with connection to wifi not being established which ended in a constant loop of attempting connection, to solve this I looked into setting up a WDT to catch the failed attempt and restart the code. This started to become complicated and the WDT event was being triggered but not restarting the code. I found the WDT was being trigged in a set up loop so as it reset the code it would catch this loop and crash out.<br>
+- **Resovle**
 As the board isn't saving any data itself I have no issue with a reset as it would react to the physical button being pressed so in times where the wifi connection cant be establised within a 60 second timeout the ESP uses a reset function on the  whole board and starts the process all over again.
   
 
