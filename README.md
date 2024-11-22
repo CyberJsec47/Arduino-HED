@@ -19,7 +19,7 @@ These readings will be sent real time wirelessly to a Raspberry Pi which will th
 
 ### The Project
 
-The hardware for this project will consist of the SparkFun weather station kit<br><img src="Images/Station.jpg" width="370" height="600"><br>And the SaprkFun MicroMod carrier board paired with a ESP32 proccessor<br>IMAGE OF BOARD<br> This takes all the desired readings and uses MQTT to send messages over WiFi to a Raspberry Pi which acts as the MQTT broker and then uses Python and Matlab to plot the messages as data on graphs, I also included a live text display so I can see climate trends over time and a live current reading.<br> The graph is a simple Matlab format put into a Tkinter window<br><img src="Images/live_graph.jpg">
+The hardware for this project will consist of the SparkFun weather station kit<br><img src="Images/Station.jpg" width="400" height="600"><br>And the SaprkFun MicroMod carrier board paired with a ESP32 proccessor<br>IMAGE OF BOARD<br> This takes all the desired readings and uses MQTT to send messages over WiFi to a Raspberry Pi which acts as the MQTT broker and then uses Python and Matlab to plot the messages as data on graphs, I also included a live text display so I can see climate trends over time and a live current reading.<br> The graph is a simple Matlab format put into a Tkinter window<br><img src="Images/live_graph.jpg">
 
 
 --- 
