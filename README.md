@@ -44,6 +44,22 @@ One issue that has come up is powering the device. Using a 2000mAh LiPoly batter
 The data from the outdoor weather station will need to be sent to the Pi inside over a short distance.<br> The [SparkFun](https://thepihut.com/products/sparkfun-arduino-iot-weather-station) Comes with an ESP32 board so I can use its WiFi capabilities to send the data with the MQTT protocol by setting the the board as publisher and the RaspPi and a subscriber.<br> To do this I am using the Mosquitto MQTT broker on the Pi. 
 
 ---
+
+### Finished main project
+
+At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br>
+
+
+- **Issues**
+- Power
+When I finished the project and was happy with the Python and C++ side of it I started to look into external power. I've settled with a 2000mAh Lipoly battery and a 6W solar panel with a Adafruit bq24074 charging board. This powered the board via the battery and the solar panel keeps the battery topped up.<br> The first issues was the solar panel is not the greatest and with cloudy and dark weather it can't charge the battery as fast as the battery drains to power the board.<br> This I found was the ESP was sending the messages every 10 seconds using a lot of power, I changed this to every 60 seconds the power issues carried on.
+- Resolve
+To fix this I looked into ESP low power mode functions. As using modem mode or sleep mode caused connection issues or still battery draining issues I opted to use light power mode on a rolling cycle of sleeping for a set time, waking up for a set time and back to sleep.
+
+- Watchdog timers
+  
+
+---
 ### Display
 
 
