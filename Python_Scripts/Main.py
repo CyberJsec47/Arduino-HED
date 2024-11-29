@@ -27,6 +27,12 @@ import Pressure
 import Temperature
 import Humidity
 import Wind
+from datetime import datetime
+
+def update_time():
+    c = datetime.now()
+    current_time = c.strftime('%H:%M:%S')
+    return current_time
 
 def display_all_graphs():
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
@@ -51,6 +57,7 @@ def display_all_graphs():
         current_wind = Wind.current_reading(Wind.live_reading)
 
         text_box.set_text(
+            f"Time is:          {update_time()}\n"
             f"Temperature is:   {current_temperature if current_temperature is not None else 'N/A'}\n"
             f"Humidity is:      {current_humidity if current_humidity is not None else 'N/A'}\n"
             f"Pressure is:      {current_pressure if current_pressure is not None else 'N/A'}\n"
