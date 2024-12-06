@@ -58,9 +58,9 @@ def display_all_graphs():
 
         text_box.set_text(
             f"Time is:          {update_time()}\n"
-            f"Temperature is:   {current_temperature if current_temperature is not None else 'N/A'}\n"
-            f"Humidity is:      {current_humidity if current_humidity is not None else 'N/A'}\n"
-            f"Pressure is:      {current_pressure if current_pressure is not None else 'N/A'}\n"
+            f"Temperature is:   {current_temperature if current_temperature is not None else 'N/A'} .C\n"
+            f"Humidity is:      {current_humidity if current_humidity is not None else 'N/A'} %\n"
+            f"Pressure is:      {current_pressure if current_pressure is not None else 'N/A'} Pa\n"
             f"Wind speed is:    {current_wind if current_wind is not None else 'N/A'}"
         )
 
