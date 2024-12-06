@@ -5,20 +5,21 @@
 #include <PubSubClient.h>
 
 // WiFi details
-//const char* ssid = "MYSSID";
-//const char* password = "MYPASS";
+const char* ssid = "MYSSID";
+const char* password = "MYPASS";
 
 // MQTT broker settings
-//home server
-//const char* mqtt_server = "RasPi server";
+const char* mqtt_server = "RasPi server";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+//init pins for on the microcontroller
 int windDirectionPin = 35;
 int windSpeedPin = 14;
 int rainfallPin = 27;
 
+//delcaring the sensors
 BME280 tempSensor;
 SFEWeatherMeterKit weatherMeterKit(windDirectionPin, windSpeedPin, rainfallPin);
 
@@ -28,6 +29,7 @@ SFEWeatherMeterKit weatherMeterKit(windDirectionPin, windSpeedPin, rainfallPin);
 #define MSG_INTERVAL 10000  
 #define PRESSURE_INTERVAL 10000 
 
+// set intervals between messages
 unsigned long lastMsg = 0;
 unsigned long lastPressureMsg = 0;
 unsigned long activeStartTime = 0; 
@@ -42,7 +44,7 @@ void setup_wifi() {
     delay(500);
     Serial.print(".");
   }
-
+  // if wifi doesnt connecting within timeframe (60 seconds) the esp proccessor restarts
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\nConnected to Wi-Fi");
     Serial.println(WiFi.localIP()); 
@@ -53,6 +55,7 @@ void setup_wifi() {
   }
 }
 
+// connects to the MQTT server
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -85,6 +88,7 @@ void setup() {
   activeStartTime = millis();
 }
 
+// reads the sensors data
 void readAndPrintSensorData() {
   float temperature_C = tempSensor.readTempC();
   float humidity = tempSensor.readFloatHumidity();
@@ -93,7 +97,7 @@ void readAndPrintSensorData() {
   float wind_speed = weatherMeterKit.getWindSpeed();
   float rain = weatherMeterKit.getTotalRainfall();
 
-  // Print data to Serial Monitor
+  // Print data to Serial Monitor for debugging purposes
   Serial.printf("Temperature: %.2f C\n", temperature_C);
   Serial.printf("Humidity: %.2f\n", humidity);
   Serial.printf("Pressure: %.2f Pa\n", pressure);
