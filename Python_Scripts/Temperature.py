@@ -77,8 +77,6 @@ def update_temperature_plot():
         ax.set_xticklabels(x_data, rotation=45)
         ax.set_xlabel("Time")
         ax.set_ylabel("Temperature (°C)")
-        ax.set_title("Outside Temperature")
-        ax.legend(loc="upper left")
         ax.set_ylim([20.0, 35.0])
         ax.fill_between(x_data, y_data, 20.0, step="pre", alpha=0.5, color='lightsteelblue')
 
