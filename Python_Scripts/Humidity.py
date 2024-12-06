@@ -79,6 +79,5 @@ def update_humidity_plot():
         ax.set_xlabel("Time")
         ax.set_ylabel("Humidity %")
         ax.set_title("Outside Humidity")
-        ax.legend(["Hiumidity %"], loc="upper left")
         ax.grid(True)
  
