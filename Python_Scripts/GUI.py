@@ -27,7 +27,7 @@ from Main import display_all_graphs
 
     
 root = tk.Tk()
-root.title("Live Updating Graphs in Tkinter")
+root.title("Live Weather In Hedge End")
 root.geometry("1620x1100")
 
 fig = display_all_graphs()
