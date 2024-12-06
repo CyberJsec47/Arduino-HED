@@ -82,7 +82,6 @@ def update_pressure_barchart():
         ax.set_xlabel("Time")
         ax.set_ylabel("Pressure (Pa)")
         ax.set_title("Atmospheric Pressure")
-        ax.legend(["Pressure (Pa)"], loc="upper left")
         ax.grid(True)
 
         plt.draw()
