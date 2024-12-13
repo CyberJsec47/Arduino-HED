@@ -43,7 +43,7 @@ This kit doesn't come with any outside gear so I had to come up with a solution 
 
 At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity,rainfall, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br><br>
 <img src="Images/stationBox.jpg"><br>
-<img SRC="Images/updatedDisplay.jpg">
+<img SRC="Images/updatedDisplay.jpeg">
 
 
 
