@@ -34,6 +34,11 @@ The data from the outdoor weather station will need to be sent to the Pi inside 
 Using Tkinter I have created a executable desktop icon that runs the Tkinter GUI module which is connected to the Matplot graphs creating one intergrated display.<br> To do this I created a desktop entry in a bash script which points to another bash script where which opens the GUI.py module in my WeatherStation directory. This might be an overly complicated way to open from an icon but it works for what I need.
 
 ---
+### weather proofing
+
+This kit doesn't come with any outside gear so I had to come up with a solution to thisyself.<br> The BME280 chip is on the board so a fully enclosed space wouldn't display the correct data<br>To solve this issue I bought a waterproof junction box and a mesh lined vent then I cut out the shape of the vent in the bottom of the box and securrd the mesh park inside the box and sealed with a waterproof silicone sealant. then attached the vented part on the outside of the box.<br>Between the vent, mesh and position on the box even during heavy rain water should not get inside the box whilst still allowing airflow. 
+
+---
 ### Finished main project
 
 At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br>
@@ -58,5 +63,5 @@ As the board isn't saving any data itself I have no issue with a reset as it wou
 ---
 ### **Next steps**
 
-Currently I am happy with the outcome of this project and it is working as intended. the only data I have excluded at this point is the rainfall meter and the lightning detector.<br>The lighting detector I find fairly uselss as my area doesn't get much stormy weather and lightning storms are rare or just not interesting to know about.<br>Rainfall is more of an intrest to me but as I want this station to be a outside monitor for my house I dont need to know if its currently raining as I have windows. Knowing the outside climate is useful for me as I don't need to stand outside to know.<br><br>The projects current code uses a rolling 60 second cycle of powering down waiting, powering back sending data for 60 seconds and so on, this is for testing purposes. When it is set up in my garden I will need to adjust this to maybe every 10, 30, 60 mins, this allows time for battery to charge and send some relevant data.<br>
+The projects current code uses a rolling 60 second cycle of powering down waiting, powering back sending data for 60 seconds and so on, this is for testing purposes. When it is set up in my garden I will need to adjust this to maybe every 10, 30, 60 mins, this allows time for battery to charge and send some relevant data. once installed outside I will have to monitor how well the solar panel keeps the board running, if it struggles I will experiment with the board power off time.<br>
 
