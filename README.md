@@ -43,13 +43,15 @@ This kit doesn't come with any outside gear so I had to come up with a solution 
 
 For practically the station will need to be self powered. To do this I have chosen a 2000mAh LiPoly battery which once fully charged can last a few days of constant use before needing recharge.<br>Paired with this I have chosen to use a solar panel connected to a Adafruit power management board. This board connects the LiPoly to the board and then the solar panel to the battery to charge once voltage drops below a defined level.<br>This board also accepts USB-C input if the weather doesn't allow a constant solar charge. <br>
 <img src="Images/solarSetup.jpg"><br>
+
+---
 ### Finished Main Project
 
 At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity,rainfall, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br><br>
 <img src="Images/stationBox.jpg"><br>
 <img SRC="Images/updatedDisplay.jpeg">
 
-
+---
 
 ### **Issues**
 - **Power**
