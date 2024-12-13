@@ -27,12 +27,14 @@ import Pressure
 import Temperature
 import Humidity
 import Wind
+import rainfall
 from datetime import datetime
 
 def update_time():
     c = datetime.now()
     current_time = c.strftime('%H:%M:%S')
     return current_time
+
 
 def display_all_graphs():
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
@@ -42,26 +44,30 @@ def display_all_graphs():
     Humidity.start_humidity_monitoring(axes[1, 0], broker="localhost", port=1883, topic="sensor/humidity", max_mins=5)
     axes[1, 1] = fig.add_subplot(2, 2, 4, projection='polar')
     Wind.start_wind_rose_plot(axes[1, 1], broker="localhost", port=1883, max_data_points=50)
+    rainfall.start_rainfall_monitoring(broker="localhost", port=1883, topic="sensor/rainfall", max_mins=5)
 
-    text_box = fig.text(0.5, 0.02, "", ha='center', va='bottom', fontsize=12, color="black")
+    text_box = fig.text(0.5, 0.01, "", ha='center', va='bottom', fontsize=12, color="black")
 
     def update_all(frame):
         Pressure.update_pressure_barchart()
         Temperature.update_temperature_plot()
         Humidity.update_humidity_plot()
         Wind.update_wind_rose(frame)
+        rainfall.update_rain_plot()
 
         current_pressure = Pressure.current_reading(Pressure.live_reading)
         current_temperature = Temperature.current_reading(Temperature.live_reading)
         current_humidity = Humidity.current_reading(Humidity.live_reading)
         current_wind = Wind.current_reading(Wind.live_reading)
+        current_rain = rainfall.current_reading(rainfall.live_reading)
 
         text_box.set_text(
             f"Time is:          {update_time()}\n"
             f"Temperature is:   {current_temperature if current_temperature is not None else 'N/A'} .C\n"
-            f"Humidity is:      {current_humidity if current_humidity is not None else 'N/A'} %\n"
+            f"Humidity is:      {current_humidity if current_humidity is not None else 'N/A'} % \n"
             f"Pressure is:      {current_pressure if current_pressure is not None else 'N/A'} Pa\n"
-            f"Wind speed is:    {current_wind if current_wind is not None else 'N/A'}"
+            f"Wind speed is:    {current_wind if current_wind is not None else 'N/A'} Kph\n"
+            f"Rainfall is:      {current_rain if current_rain is not None else 'N/A'} mm"
         )
 
     fig.ani = FuncAnimation(fig, update_all, interval=1000)
