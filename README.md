@@ -1,9 +1,9 @@
-## Arduino Home climate display
+## IoT Home Weather Statiom
 
 ---
 
-### The goal of this project is to create an indoor and outdoor climate monitor.
-#### The monitor will be build using Arduino and various sensors to display the following:
+### The goal of this project is to create an indoor and outdoor weather monitor.
+#### The monitor will be build using an microcontroller and various sensors to display the following:
 
 - **Temperature**
 - **Humidity** 
@@ -42,7 +42,8 @@ This kit doesn't come with any outside gear so I had to come up with a solution 
 ### Finished main project
 
 At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity,rainfall, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br><br>
-<img src="Images/stationBox.jpg">
+<img src="Images/stationBox.jpg"><br>
+<img SRC="Images/updatedDisplay.jpg">
 
 
 
