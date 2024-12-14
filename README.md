@@ -48,7 +48,7 @@ For practically the station will need to be self powered. To do this I have chos
 ### Finished Main Project
 
 At its current stage I am saying this project is finished. The main goals of creating an IoT weather station to display the temperature, humidity,rainfall, wind speed and direction is complete alongside a live text display and charts for some weather trends and patterns.<br><br>
-<img src="Images/stationBox.jpg"><br>
+<img src="Images/PXL_20241214_130608843.jpg"><br>
 <img SRC="Images/updatedDisplay.jpeg">
 
 ---
